@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>鑑定結果｜神楽タロット</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Zen+Antique&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --gold:#C9A84C;--gold-l:#FFE08A;--gold-d:#8B6914;
+      --gold-grad:linear-gradient(135deg,#8B6914,#C9A84C,#FFE08A,#C9A84C,#8B6914);
+      --ink:#030308;--ivory:#EDE0C4;--dim:rgba(237,224,196,.58);--border:rgba(201,168,76,.22);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{font-family:'Noto Serif JP',serif;background:var(--ink);color:var(--ivory);min-height:100vh;}
+    #sf{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+    .st{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d,3s) var(--dl,0s) infinite ease-in-out;}
+    @keyframes tw{0%,100%{opacity:.08;transform:scale(.7);}50%{opacity:.65;transform:scale(1.2);}}
+    .nb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;}
+    @keyframes shim{0%{background-position:0% center;}100%{background-position:200% center;}}
+    @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes pulse{0%,100%{opacity:.7;transform:scale(.95);}50%{opacity:1;transform:scale(1.05);}}
+
+    .wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:44px 18px 80px;}
+
+    .page-hdr{text-align:center;margin-bottom:28px;animation:rise .6s ease;}
+    .brand{font-family:'Zen Antique',serif;font-size:.88rem;background:var(--gold-grad);background-size:200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shim 4s linear infinite;letter-spacing:.45em;}
+    .page-title{font-family:'Zen Antique',serif;font-size:1.3rem;font-weight:400;letter-spacing:.18em;margin-top:8px;}
+
+    .card-hero{display:flex;gap:18px;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:24px;animation:rise .6s .1s ease both;}
+    .card-hero img{width:72px;aspect-ratio:2/3;border-radius:8px;object-fit:cover;border:1px solid rgba(201,168,76,.3);}
+    .card-hero-prob{font-size:.65rem;color:var(--gold);letter-spacing:.12em;margin-bottom:6px;opacity:.8;}
+    .card-hero-name{font-family:'Zen Antique',serif;font-size:1.15rem;background:var(--gold-grad);background-size:200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shim 4s linear infinite;}
+    .card-hero-en{font-size:.7rem;color:var(--dim);letter-spacing:.08em;margin-top:4px;}
+    .orient-badge{display:inline-block;border:1px solid rgba(201,168,76,.35);border-radius:100px;padding:3px 12px;font-size:.65rem;color:var(--gold);margin-top:8px;letter-spacing:.08em;}
+
+    .reading-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:18px;padding:28px 22px;margin-bottom:24px;animation:rise .6s .2s ease both;}
+    .reading-body{font-size:.92rem;line-height:2.2;color:var(--dim);}
+    .reading-body p{margin-bottom:.9em;}
+
+    .pw-section{animation:rise .6s .3s ease both;}
+    .sep{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+    .sep::before,.sep::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.3));}
+    .sep::after{background:linear-gradient(to left,transparent,rgba(201,168,76,.3));}
+    .sep span{font-size:.65rem;color:var(--gold);white-space:nowrap;letter-spacing:.15em;}
+
+    .pw-card{border:1px solid rgba(201,168,76,.35);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.025);}
+    .pw-preview{padding:22px 20px 0;}
+    .pw-ch{font-size:.8rem;color:var(--gold);letter-spacing:.1em;margin-bottom:8px;}
+    .pw-text{font-size:.83rem;line-height:2.0;color:rgba(237,224,196,.3);filter:blur(5px);user-select:none;pointer-events:none;padding-bottom:18px;}
+    .pw-gate{background:linear-gradient(to bottom,transparent 0%,rgba(3,3,8,.75) 22%,rgba(3,3,8,.97) 52%);padding:50px 20px 28px;text-align:center;margin-top:-50px;position:relative;}
+    .lock-ic{font-size:2rem;display:block;margin-bottom:10px;animation:pulse 2.5s ease-in-out infinite;}
+    .pw-title{font-family:'Zen Antique',serif;font-size:1.05rem;letter-spacing:.1em;margin-bottom:8px;}
+    .pw-desc{font-size:.78rem;color:var(--dim);line-height:2.0;margin-bottom:20px;}
+    .pw-desc strong{color:var(--gold);}
+    .cta{display:block;width:100%;padding:17px;border:none;border-radius:12px;font-family:'Noto Serif JP',serif;font-size:1.05rem;font-weight:500;letter-spacing:.12em;color:#0C0A00;cursor:pointer;background:var(--gold-grad);background-size:200%;animation:shim 3s linear infinite;transition:transform .1s,opacity .15s;box-shadow:0 4px 28px rgba(201,168,76,.3);}
+    .cta:active{transform:scale(.98);opacity:.9;}
+    .cta-note{font-size:.65rem;color:rgba(237,224,196,.25);margin-top:9px;letter-spacing:.06em;line-height:1.9;}
+  </style>
+</head>
+<body>
+<div id="sf"></div>
+<div class="nb" style="width:320px;height:320px;top:-60px;right:-60px;background:radial-gradient(circle,rgba(60,10,100,.28),transparent)"></div>
+
+<div class="wrap">
+  <header class="page-hdr">
+    <p class="brand">神楽タロット</p>
+    <h1 class="page-title">鑑定結果</h1>
+  </header>
+
+  <div class="card-hero">
+    <img src="{{ card.image_url }}" alt="{{ card.name }}">
+    <div>
+      <p class="card-hero-prob">{{ user_problem }}の鑑定</p>
+      <div class="card-hero-name">{{ card.name }}</div>
+      <div class="card-hero-en">{{ card.name_en }}</div>
+      <span class="orient-badge">{{ orient_label }}</span>
+    </div>
+  </div>
+
+  <div class="reading-card">
+    <div class="reading-body" id="reading-body"></div>
+  </div>
+
+  <div class="pw-section">
+    <div class="sep"><span>🔮 &nbsp;有料鑑定&nbsp; 🔮</span></div>
+    <div class="pw-card">
+      <div class="pw-preview">
+        <p class="pw-ch">【あの人の隠れた本音】</p>
+        <p class="pw-text">正直に言う。このカードが今のタイミングで出たということは——相手の心の中に、あなたには見せていない感情がある。それは決して単純なものじゃなくて、むしろ複雑に絡み合った……あなたへの、あれとこれが混ざり合った、本当の気持ちで……</p>
+        <p class="pw-ch" style="margin-top:10px;">【二人の最終的な結末】</p>
+        <p class="pw-text">このまま行くと、〇ヶ月以内にあなたたちの間で決定的な何かが起きる。それは良い意味でも悪い意味でもなく、ただ「答え」が出る瞬間で……二人の関係が……</p>
+      </div>
+      <div class="pw-gate">
+        <span class="lock-ic">🔓</span>
+        <h2 class="pw-title">あの人の本音と最終結末を解放する</h2>
+        <p class="pw-desc">
+          <strong>「あの人の隠れた本音」</strong>と<br>
+          <strong>「二人の最終的な結末」</strong>を<br>
+          今すぐ完全公開します
+        </p>
+        <form action="/order-tarot" method="POST">
+          <input type="hidden" name="card_id"      value="{{ card_id }}">
+          <input type="hidden" name="is_upright"   value="{{ is_upright }}">
+          <input type="hidden" name="user_problem" value="{{ user_problem }}">
+          <input type="hidden" name="email"        value="{{ email }}">
+          <button type="submit" class="cta">¥500 で今すぐ解放する &nbsp;→</button>
+        </form>
+        <p class="cta-note">Stripe 安全決済 &nbsp;|&nbsp; 30分以内にメール納品</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const sf=document.getElementById('sf');
+  for(let i=0;i<100;i++){
+    const s=document.createElement('div');s.className='st';
+    const sz=Math.random()*1.8+.4;
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${(Math.random()*4+2).toFixed(1)}s;--dl:${(Math.random()*6).toFixed(1)}s;`;
+    sf.appendChild(s);
+  }
+  const raw = {{ reading | tojson }};
+  const body = document.getElementById('reading-body');
+  raw.split('\n').forEach(line => {
+    const t = line.trim();
+    if(!t) return;
+    const p = document.createElement('p');
+    p.textContent = t;
+    body.appendChild(p);
+  });
+</script>
+</body>
+</html>
