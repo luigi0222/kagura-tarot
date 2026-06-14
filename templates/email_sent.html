@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>メール送信完了｜神楽タロット</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&family=Zen+Antique&display=swap" rel="stylesheet">
+  <style>
+    :root{--gold:#C9A84C;--gg:linear-gradient(135deg,#8B6914,#C9A84C,#FFE08A,#C9A84C,#8B6914);--ink:#030308;--ivory:#EDE0C4;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{font-family:'Noto Serif JP',serif;background:var(--ink);color:var(--ivory);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+    #sf{position:fixed;inset:0;pointer-events:none;z-index:0;}
+    .st{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d,3s) var(--dl,0s) infinite ease-in-out;}
+    @keyframes tw{0%,100%{opacity:.07;transform:scale(.7);}50%{opacity:.6;transform:scale(1.2);}}
+    @keyframes shim{0%{background-position:0% center;}100%{background-position:200% center;}}
+    @keyframes rise{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes check{0%{transform:scale(0) rotate(-10deg);opacity:0;}60%{transform:scale(1.15);opacity:1;}100%{transform:scale(1);}}
+
+    .card{position:relative;z-index:1;max-width:400px;width:90%;text-align:center;border:1px solid rgba(201,168,76,.22);border-radius:24px;padding:52px 28px 44px;background:rgba(255,255,255,.025);animation:rise .7s ease;}
+    .ic{font-size:3rem;display:block;margin-bottom:18px;animation:check .6s .3s cubic-bezier(.4,0,.2,1) both;}
+    h1{font-family:'Zen Antique',serif;font-size:1.35rem;background:var(--gg);background-size:200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shim 4s linear infinite;letter-spacing:.15em;margin-bottom:18px;}
+    .email-disp{font-size:.8rem;color:var(--gold);background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:8px 14px;display:inline-block;margin-bottom:20px;letter-spacing:.04em;}
+    p{font-size:.86rem;line-height:2.2;color:rgba(237,224,196,.55);margin-bottom:8px;}
+    .warn{font-size:.75rem;color:rgba(237,224,196,.32);margin-top:18px;line-height:2.0;}
+    .warn strong{color:rgba(201,168,76,.6);}
+    .back{display:inline-block;margin-top:32px;padding:13px 32px;border:1px solid rgba(201,168,76,.3);border-radius:10px;color:var(--gold);font-size:.82rem;letter-spacing:.1em;text-decoration:none;transition:background .2s;}
+    .back:hover{background:rgba(201,168,76,.07);}
+    .div{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.18),transparent);margin:22px 0;}
+  </style>
+</head>
+<body>
+<div id="sf"></div>
+<div class="card">
+  <span class="ic">📩</span>
+  <h1>メールを送りました</h1>
+  {% if email %}
+  <div class="email-disp">{{ email }}</div>
+  {% endif %}
+  <p>「あの人の隠れた本音」と<br>「二人の最終的な結末」を含む<br><strong style="color:var(--gold);">完全鑑定書</strong>をお届けしました。</p>
+  <div class="div"></div>
+  <p class="warn">
+    メールが届かない場合は<br>
+    <strong>迷惑メールフォルダ</strong>もご確認ください。<br>
+    通常30秒〜3分以内に届きます。
+  </p>
+  <a href="/" class="back">← 別のカードを引く</a>
+</div>
+<script>
+const sf=document.getElementById('sf');
+for(let i=0;i<80;i++){
+  const s=document.createElement('div');s.className='st';
+  const sz=Math.random()*1.6+.3;
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${(Math.random()*4+2).toFixed(1)}s;--dl:${(Math.random()*5).toFixed(1)}s;`;
+  sf.appendChild(s);
+}
+</script>
+</body>
+</html>

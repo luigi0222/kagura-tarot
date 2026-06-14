@@ -3,234 +3,365 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>タロット恋愛鑑定｜神楽</title>
+  <title>神楽タロット｜恋愛無料鑑定</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Zen+Antique&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --gold: #C9A84C; --gold-light: #FFE08A; --gold-dark: #8B6914;
-      --ink: #030308; --ivory: #EDE0C4; --ivory-dim: rgba(237,224,196,0.55);
-      --border: rgba(201,168,76,0.22);
-      --gold-grad: linear-gradient(135deg,#8B6914,#C9A84C,#FFE08A,#C9A84C,#8B6914);
+    :root{
+      --gold:#C9A84C;--gl:#FFE08A;--gd:#8B6914;
+      --gg:linear-gradient(135deg,#8B6914,#C9A84C,#FFE08A,#C9A84C,#8B6914);
+      --ink:#030308;--ivory:#EDE0C4;--dim:rgba(237,224,196,.55);--bd:rgba(201,168,76,.22);
     }
     *{box-sizing:border-box;margin:0;padding:0;}
     html,body{font-family:'Noto Serif JP',serif;background:var(--ink);color:var(--ivory);min-height:100vh;overflow-x:hidden;}
 
+    /* Starfield */
     #sf{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
     .st{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d,3s) var(--dl,0s) infinite ease-in-out;}
-    @keyframes tw{0%,100%{opacity:.1;transform:scale(.7);}50%{opacity:.8;transform:scale(1.3);}}
+    @keyframes tw{0%,100%{opacity:.08;transform:scale(.7);}50%{opacity:.7;transform:scale(1.3);}}
     .nb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;}
 
-    #loading{position:fixed;inset:0;background:#000;z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
-    #loading.on{display:flex;animation:fdin .5s ease;}
+    /* Loading overlay */
+    #ld{position:fixed;inset:0;background:#000;z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+    #ld.on{display:flex;animation:fdin .4s ease;}
     @keyframes fdin{from{opacity:0;}to{opacity:1;}}
-    .fs{position:absolute;width:2px;border-radius:1px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);animation:fall var(--fd,3s) var(--fdl,0s) linear infinite;opacity:0;}
-    @keyframes fall{0%{transform:translateY(-40px);opacity:0;}10%{opacity:1;}90%{opacity:.6;}100%{transform:translateY(110vh);opacity:0;}}
-    .orb{width:90px;height:90px;border-radius:50%;border:1px solid rgba(201,168,76,.4);animation:spin 3s linear infinite;display:flex;align-items:center;justify-content:center;}
-    .orb::before{content:'';position:absolute;width:62px;height:62px;border-radius:50%;border:1px solid rgba(201,168,76,.22);animation:spin 2s linear infinite reverse;}
+    .fstar{position:absolute;width:2px;border-radius:1px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);animation:fall var(--fd,3s) var(--fdl,0s) linear infinite;opacity:0;}
+    @keyframes fall{0%{transform:translateY(-40px);opacity:0;}10%{opacity:1;}90%{opacity:.5;}100%{transform:translateY(110vh);opacity:0;}}
+    .orb{width:88px;height:88px;border-radius:50%;border:1px solid rgba(201,168,76,.4);animation:spin 3s linear infinite;display:flex;align-items:center;justify-content:center;position:relative;}
+    .orb::before{content:'';position:absolute;width:60px;height:60px;border-radius:50%;border:1px solid rgba(201,168,76,.2);animation:spin 2s linear infinite reverse;}
     .orb::after{content:'🔮';font-size:1.5rem;}
     @keyframes spin{to{transform:rotate(360deg);}}
     @keyframes shim{0%{background-position:0% center;}100%{background-position:200% center;}}
 
-    .wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 18px 80px;}
-    @keyframes rise{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+    /* Layout */
+    .wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 16px 80px;}
+    @keyframes rise{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 
-    .hdr{text-align:center;padding:44px 0 32px;}
-    .sub-lbl{font-size:.68rem;letter-spacing:.3em;color:var(--gold);opacity:.7;margin-bottom:8px;}
-    .title{font-family:'Zen Antique',serif;font-size:1.7rem;background:var(--gold-grad);background-size:200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shim 4s linear infinite;letter-spacing:.3em;}
+    /* Header */
+    .hdr{text-align:center;padding:44px 0 28px;animation:rise .6s ease;}
+    .brand-sub{font-size:.65rem;letter-spacing:.3em;color:var(--gold);opacity:.65;margin-bottom:10px;}
+    .brand-title{font-family:'Zen Antique',serif;font-size:1.9rem;background:var(--gg);background-size:200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shim 4s linear infinite;letter-spacing:.3em;}
 
-    .steps{display:flex;justify-content:center;gap:6px;margin-bottom:28px;}
-    .step-dot{width:28px;height:4px;border-radius:2px;background:rgba(201,168,76,.2);transition:background .3s;}
-    .step-dot.active{background:var(--gold);}
+    /* Step dots */
+    .dots{display:flex;justify-content:center;gap:8px;margin-bottom:26px;}
+    .dot{width:24px;height:3px;border-radius:2px;background:rgba(201,168,76,.18);transition:background .3s;}
+    .dot.on{background:var(--gold);}
 
-    .section{display:none;animation:rise .5s ease;}
-    .section.visible{display:block;}
-    .sec-title{font-size:.72rem;letter-spacing:.22em;color:var(--gold);text-align:center;margin-bottom:20px;text-transform:uppercase;}
+    /* Section visibility */
+    .sec{display:none;}
+    .sec.vis{display:block;animation:rise .5s ease;}
 
-    .prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
-    .prob-btn{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .2s;font-family:'Noto Serif JP',serif;color:var(--ivory-dim);font-size:.85rem;line-height:1.6;}
-    .prob-btn .emoji{font-size:1.4rem;display:block;margin-bottom:6px;}
-    .prob-btn.sel,.prob-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.07);}
+    /* Step 1: problem */
+    .q-title{font-size:.75rem;letter-spacing:.2em;color:var(--gold);text-align:center;margin-bottom:18px;}
+    .prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .pb{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:16px;padding:20px 10px 16px;text-align:center;cursor:pointer;transition:all .2s;font-family:'Noto Serif JP',serif;color:var(--dim);}
+    .pb .em{font-size:1.5rem;display:block;margin-bottom:8px;}
+    .pb .lb{font-size:.85rem;display:block;}
+    .pb .ds{font-size:.62rem;display:block;margin-top:4px;opacity:.6;line-height:1.5;}
+    .pb.sel,.pb:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.07);}
 
-    .card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-    .card-item{aspect-ratio:2/3;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .2s;position:relative;}
-    .card-item img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.85);}
-    .card-item:hover img{filter:brightness(1);}
-    .card-item.sel{border-color:var(--gold);box-shadow:0 0 16px rgba(201,168,76,.4);}
-    .card-item .card-name{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(3,3,8,.95),transparent);padding:6px 4px 4px;font-size:.52rem;text-align:center;color:var(--gold);letter-spacing:.05em;}
+    /* Step 2: card spread */
+    .shuf-area{text-align:center;margin-bottom:22px;}
+    .shuf-btn{padding:14px 36px;border:1px solid rgba(201,168,76,.5);border-radius:100px;background:rgba(201,168,76,.08);font-family:'Noto Serif JP',serif;font-size:.9rem;color:var(--gold);cursor:pointer;letter-spacing:.12em;transition:all .2s;}
+    .shuf-btn:hover{background:rgba(201,168,76,.14);}
+    .shuf-btn:disabled{opacity:.4;cursor:default;}
+    #pick-msg{font-size:.72rem;letter-spacing:.18em;color:rgba(201,168,76,.7);text-align:center;margin-bottom:14px;display:none;}
 
-    .orient-row{display:flex;gap:10px;margin-bottom:6px;}
-    .orient-btn{flex:1;border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;cursor:pointer;font-family:'Noto Serif JP',serif;color:var(--ivory-dim);font-size:.85rem;transition:all .2s;}
-    .orient-btn.sel{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.07);}
+    /* Card grid */
+    .card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+    .cw{aspect-ratio:2/3;perspective:700px;cursor:default;transition:opacity .3s;}
+    .cw.sel-enabled{cursor:pointer;}
+    .cw.sel-enabled:hover .ci{box-shadow:0 0 18px rgba(201,168,76,.35);}
+    .cw.faded{opacity:.15;}
+    .ci{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .75s cubic-bezier(.4,0,.2,1);border-radius:7px;}
+    .ci.flipped{transform:rotateY(180deg);}
+    .cb,.cf{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:7px;overflow:hidden;}
+    .cf{transform:rotateY(180deg);}
+    .cf img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s .7s;}
 
-    .field-input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;color:var(--ivory);padding:13px 16px;font-family:'Noto Serif JP',serif;font-size:.95rem;outline:none;transition:border-color .2s;-webkit-appearance:none;}
-    .field-input:focus{border-color:var(--gold);}
-    .field-input::placeholder{color:rgba(237,224,196,.2);}
-    .cta{width:100%;padding:17px;border:none;border-radius:12px;font-family:'Noto Serif JP',serif;font-size:1rem;letter-spacing:.12em;color:#0C0A00;cursor:pointer;background:var(--gold-grad);background-size:200%;animation:shim 3s linear infinite;transition:transform .1s,opacity .15s;margin-top:6px;font-weight:500;}
-    .cta:disabled{opacity:.5;cursor:not-allowed;}
-    .cta:not(:disabled):active{transform:scale(.98);}
-    .note{text-align:center;font-size:.68rem;color:rgba(237,224,196,.25);margin-top:10px;line-height:1.9;}
+    /* Card back design */
+    .cb{
+      background:linear-gradient(160deg,#0c0520,#180830,#0a0415);
+      border:1px solid rgba(201,168,76,.28);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .cb-inner{
+      width:72%;height:82%;
+      border:1px solid rgba(201,168,76,.2);
+      border-radius:4px;
+      display:flex;align-items:center;justify-content:center;
+      background:
+        repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(201,168,76,.03) 3px,rgba(201,168,76,.03) 4px),
+        repeating-linear-gradient(-45deg,transparent,transparent 3px,rgba(201,168,76,.03) 3px,rgba(201,168,76,.03) 4px);
+      font-size:.9rem;opacity:.5;
+    }
 
-    .nav-btn{display:block;width:100%;padding:14px;border:1px solid var(--border);border-radius:12px;font-family:'Noto Serif JP',serif;font-size:.9rem;color:var(--gold);cursor:pointer;background:transparent;transition:all .2s;margin-top:14px;letter-spacing:.08em;}
-    .nav-btn:hover{background:rgba(201,168,76,.06);}
+    /* Step 3: flipped result */
+    .flip-result{display:flex;flex-direction:column;align-items:center;gap:20px;}
+    .flip-card-img{width:110px;aspect-ratio:2/3;border-radius:10px;overflow:hidden;border:1px solid rgba(201,168,76,.3);box-shadow:0 0 32px rgba(201,168,76,.2);}
+    .flip-card-img img{width:100%;height:100%;object-fit:cover;display:block;}
+    .flip-card-img img.rev{transform:rotate(180deg);}
+    .flip-info{text-align:center;}
+    .flip-prob{font-size:.62rem;letter-spacing:.15em;color:var(--gold);opacity:.7;margin-bottom:6px;}
+    .flip-name{font-family:'Zen Antique',serif;font-size:1.3rem;background:var(--gg);background-size:200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shim 4s linear infinite;margin-bottom:4px;}
+    .flip-en{font-size:.68rem;color:var(--dim);letter-spacing:.08em;margin-bottom:10px;}
+    .orient-badge{display:inline-block;border:1px solid rgba(201,168,76,.35);border-radius:100px;padding:4px 14px;font-size:.65rem;color:var(--gold);letter-spacing:.1em;}
 
-    .card-preview{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:20px;}
-    .card-preview img{width:52px;aspect-ratio:2/3;border-radius:6px;object-fit:cover;}
-    .card-preview-name{font-size:.95rem;color:var(--gold);margin-bottom:4px;}
-    .card-preview-en{font-size:.7rem;color:var(--ivory-dim);letter-spacing:.08em;}
+    /* CTA */
+    .cta{display:block;width:100%;padding:17px;border:none;border-radius:12px;font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:500;letter-spacing:.12em;color:#0C0A00;cursor:pointer;background:var(--gg);background-size:200%;animation:shim 3s linear infinite;box-shadow:0 4px 28px rgba(201,168,76,.28);transition:transform .1s,opacity .15s;margin-top:6px;}
+    .cta:active{transform:scale(.98);}
+    .note-sm{text-align:center;font-size:.65rem;color:rgba(237,224,196,.22);margin-top:10px;line-height:1.9;letter-spacing:.04em;}
+    .divider{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.2),transparent);margin:24px 0;}
   </style>
 </head>
 <body>
 <div id="sf"></div>
-<div class="nb" style="width:380px;height:380px;top:-80px;right:-80px;background:radial-gradient(circle,rgba(60,10,100,.3),transparent)"></div>
-<div class="nb" style="width:280px;height:280px;bottom:150px;left:-60px;background:radial-gradient(circle,rgba(10,20,70,.25),transparent)"></div>
+<div class="nb" style="width:400px;height:400px;top:-80px;right:-80px;background:radial-gradient(circle,rgba(60,10,100,.28),transparent)"></div>
+<div class="nb" style="width:300px;height:300px;bottom:100px;left:-60px;background:radial-gradient(circle,rgba(10,20,80,.22),transparent)"></div>
 
-<div id="loading">
+<!-- Loading -->
+<div id="ld">
   <div id="fsc" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;"></div>
   <div class="orb"></div>
-  <p id="lmsg" style="font-size:.88rem;letter-spacing:.12em;color:rgba(201,168,76,.8);min-height:1.4em;text-align:center;">カードを読み解いています...</p>
-  <p style="font-size:.65rem;color:rgba(201,168,76,.3);letter-spacing:.12em;">30〜60秒かかります</p>
+  <p id="lmsg" style="font-size:.86rem;letter-spacing:.14em;color:rgba(201,168,76,.8);text-align:center;min-height:1.4em;"></p>
+  <p style="font-size:.62rem;color:rgba(201,168,76,.28);letter-spacing:.12em;">30〜60秒かかります</p>
 </div>
 
 <div class="wrap">
   <header class="hdr">
-    <p class="sub-lbl">☽ Tarot Love Reading ☾</p>
-    <h1 class="title">神楽タロット</h1>
+    <p class="brand-sub">☽ Tarot Love Reading ☾</p>
+    <h1 class="brand-title">神楽タロット</h1>
   </header>
 
-  <div class="steps">
-    <div class="step-dot active" id="dot0"></div>
-    <div class="step-dot" id="dot1"></div>
-    <div class="step-dot" id="dot2"></div>
-    <div class="step-dot" id="dot3"></div>
+  <!-- Step dots -->
+  <div class="dots">
+    <div class="dot on" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
   </div>
 
-  <form action="/tarot/reading" method="POST" id="tarot-form">
-    <input type="hidden" name="card_id"      id="card_id_input"    value="0">
-    <input type="hidden" name="is_upright"   id="is_upright_input" value="true">
-    <input type="hidden" name="user_problem" id="problem_input"    value="">
-    <input type="hidden" name="email"        id="email_input"      value="">
+  <!-- Step 1: Concern -->
+  <div class="sec vis" id="s1">
+    <p class="q-title">― Step 1 ―　あなたの今の状況は？</p>
+    <div class="prob-grid">
+      <button class="pb" data-v="復縁" onclick="pickProb(this)">
+        <span class="em">🕯️</span>
+        <span class="lb">復縁</span>
+        <span class="ds">一度離れた縁を<br>もう一度結び直したい</span>
+      </button>
+      <button class="pb" data-v="新たな恋" onclick="pickProb(this)">
+        <span class="em">✨</span>
+        <span class="lb">新たな恋</span>
+        <span class="ds">運命の相手と出会う<br>時期を知りたい</span>
+      </button>
+      <button class="pb" data-v="浮ついた心" onclick="pickProb(this)">
+        <span class="em">🌙</span>
+        <span class="lb">浮ついた心</span>
+        <span class="ds">複雑な関係、誰にも<br>言えない迷い・秘密の恋</span>
+      </button>
+      <button class="pb" data-v="運命の人" onclick="pickProb(this)">
+        <span class="em">💫</span>
+        <span class="lb">運命の人</span>
+        <span class="ds">魂の片割れ・<br>ツインレイの診断</span>
+      </button>
+    </div>
+  </div>
 
-    <div class="section visible" id="step0">
-      <p class="sec-title">― Step 1 ―　あなたの悩みは？</p>
-      <div class="prob-grid">
-        <button type="button" class="prob-btn" data-v="片思い"       onclick="selectProb(this)"><span class="emoji">💌</span>片思い</button>
-        <button type="button" class="prob-btn" data-v="復縁"         onclick="selectProb(this)"><span class="emoji">🕯️</span>復縁</button>
-        <button type="button" class="prob-btn" data-v="浮気・秘密の恋" onclick="selectProb(this)"><span class="emoji">🌙</span>秘密の恋</button>
-        <button type="button" class="prob-btn" data-v="相手の本音"   onclick="selectProb(this)"><span class="emoji">🔍</span>相手の本音</button>
+  <!-- Step 2: Card spread -->
+  <div class="sec" id="s2">
+    <p class="q-title" id="s2-title">― Step 2 ―　カードをシャッフルしてください</p>
+    <div class="shuf-area">
+      <button class="shuf-btn" id="shuf-btn" onclick="doShuffle()">🔀 &nbsp;シャッフルする</button>
+    </div>
+    <p id="pick-msg">✦ 直感で 1 枚を選んでタップしてください ✦</p>
+    <div class="card-grid" id="cg"></div>
+  </div>
+
+  <!-- Step 3: Flipped card + submit -->
+  <div class="sec" id="s3">
+    <p class="q-title">― Step 3 ―　カードが引かれました</p>
+    <div class="flip-result">
+      <div class="flip-card-img" id="fc-img"></div>
+      <div class="flip-info">
+        <p class="flip-prob" id="fc-prob"></p>
+        <div class="flip-name" id="fc-name"></div>
+        <div class="flip-en" id="fc-en"></div>
+        <span class="orient-badge" id="fc-orient"></span>
       </div>
-      <button type="button" class="nav-btn" id="next0" onclick="goStep(1)" disabled>カードを選ぶ →</button>
     </div>
-
-    <div class="section" id="step1">
-      <p class="sec-title">― Step 2 ―　1枚引いてください</p>
-      <div class="card-grid" id="card-grid"></div>
-      <button type="button" class="nav-btn" id="next1" onclick="goStep(2)" disabled style="margin-top:14px;">向きを選ぶ →</button>
-    </div>
-
-    <div class="section" id="step2">
-      <p class="sec-title">― Step 3 ―　カードの向きは？</p>
-      <div id="card-prev-wrap"></div>
-      <div class="orient-row">
-        <button type="button" class="orient-btn sel" id="ob-up"   onclick="selectOrient(true)">正位置 ↑</button>
-        <button type="button" class="orient-btn"     id="ob-down" onclick="selectOrient(false)">逆位置 ↓</button>
-      </div>
-      <button type="button" class="nav-btn" onclick="goStep(3)">メールを入力 →</button>
-    </div>
-
-    <div class="section" id="step3">
-      <p class="sec-title">― Step 4 ―　鑑定結果を受け取る</p>
-      <div style="margin-bottom:18px;">
-        <p style="font-size:.7rem;color:var(--gold);letter-spacing:.15em;margin-bottom:8px;">メールアドレス（有料鑑定の受け取りに使用）</p>
-        <input type="text" class="field-input" placeholder="example@gmail.com" oninput="document.getElementById('email_input').value=this.value">
-      </div>
-      <button type="submit" class="cta" id="submit-btn">🔮 &nbsp;今すぐ無料で鑑定する&nbsp; →</button>
-      <p class="note">完全無料・カード不要<br>有料部分（¥500）はこの後に表示されます</p>
-    </div>
-  </form>
+    <div class="divider"></div>
+    <form action="/tarot/reading" method="POST" id="mf">
+      <input type="hidden" name="card_id"      id="fi-id">
+      <input type="hidden" name="is_upright"   id="fi-up">
+      <input type="hidden" name="user_problem" id="fi-prob">
+      <button type="submit" class="cta">🔮 &nbsp;今すぐ無料で鑑定を見る&nbsp; →</button>
+      <p class="note-sm">完全無料・3,000文字の超詳細鑑定</p>
+    </form>
+  </div>
 </div>
 
 <script>
 const CARDS = {{ cards_json | safe }};
-let selectedCardId = null;
+let prob = '';
+let chosenCard = null;
+let chosenUp = true;
+let canPick = false;
 
+// ─── Starfield ───────────────────────────────────────────────
 const sf = document.getElementById('sf');
-for(let i=0;i<130;i++){
+for(let i=0;i<120;i++){
   const s=document.createElement('div'); s.className='st';
-  const sz=Math.random()*2+.4;
+  const sz=Math.random()*1.8+.3;
   s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${(Math.random()*4+2).toFixed(1)}s;--dl:${(Math.random()*6).toFixed(1)}s;`;
   sf.appendChild(s);
 }
 
-const grid = document.getElementById('card-grid');
+// ─── Build face-down card grid ────────────────────────────────
+const cg = document.getElementById('cg');
 CARDS.forEach(card => {
-  const el = document.createElement('div');
-  el.className = 'card-item';
-  el.dataset.id = card.id;
-  el.innerHTML = `<img src="${card.image_url}" alt="${card.name}" loading="lazy"><div class="card-name">${card.name}</div>`;
-  el.onclick = () => selectCard(card.id);
-  grid.appendChild(el);
+  const cw = document.createElement('div');
+  cw.className = 'cw';
+  cw.dataset.id = card.id;
+  cw.innerHTML = `
+    <div class="ci" id="ci${card.id}">
+      <div class="cb"><div class="cb-inner">🔮</div></div>
+      <div class="cf"><img src="${card.image_url}" alt="${card.name}" loading="lazy"></div>
+    </div>`;
+  cw.onclick = () => onCardTap(card);
+  cg.appendChild(cw);
 });
 
-function selectCard(id){
-  document.querySelectorAll('.card-item').forEach(c=>c.classList.remove('sel'));
-  document.querySelector(`.card-item[data-id="${id}"]`).classList.add('sel');
-  selectedCardId = id;
-  document.getElementById('card_id_input').value = id;
-  document.getElementById('next1').disabled = false;
+// ─── Step navigation ─────────────────────────────────────────
+function setStep(n){
+  ['s1','s2','s3'].forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('vis', i===n);
+  });
+  ['d0','d1','d2'].forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('on', i===n);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
-function selectProb(btn){
-  document.querySelectorAll('.prob-btn').forEach(b=>b.classList.remove('sel'));
+// ─── Step 1: concern ─────────────────────────────────────────
+function pickProb(btn){
+  document.querySelectorAll('.pb').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
-  document.getElementById('problem_input').value = btn.dataset.v;
-  document.getElementById('next0').disabled = false;
+  prob = btn.dataset.v;
+  setTimeout(()=>setStep(1), 260);
 }
 
-function selectOrient(upright){
-  document.getElementById('is_upright_input').value = upright ? 'true' : 'false';
-  document.getElementById('ob-up').classList.toggle('sel', upright);
-  document.getElementById('ob-down').classList.toggle('sel', !upright);
+// ─── Step 2: shuffle ─────────────────────────────────────────
+function doShuffle(){
+  const btn = document.getElementById('shuf-btn');
+  btn.disabled = true;
+  btn.textContent = '✨ シャッフル中...';
+
+  const wraps = document.querySelectorAll('.cw');
+  let round = 0;
+
+  const runRound = () => {
+    wraps.forEach(w => {
+      const tx = (Math.random()-.5)*55;
+      const ty = (Math.random()-.5)*32;
+      const r  = (Math.random()-.5)*18;
+      w.style.transition = 'transform .32s ease';
+      w.style.transform  = `translate(${tx}px,${ty}px) rotate(${r}deg)`;
+    });
+    setTimeout(()=>{
+      wraps.forEach(w=>{ w.style.transition='transform .36s ease'; w.style.transform=''; });
+      round++;
+      if(round < 3) setTimeout(runRound, 420);
+      else setTimeout(enablePick, 450);
+    }, 350);
+  };
+
+  setTimeout(runRound, 80);
 }
 
-function goStep(n){
-  for(let i=0;i<4;i++){
-    document.getElementById('step'+i).classList.toggle('visible', i===n);
-    document.getElementById('dot'+i).classList.toggle('active', i===n);
+function enablePick(){
+  canPick = true;
+  document.getElementById('shuf-btn').style.display = 'none';
+  document.getElementById('s2-title').textContent = '― Step 2 ―　1 枚を直感で選んでください';
+  document.getElementById('pick-msg').style.display = 'block';
+  document.querySelectorAll('.cw').forEach(w=>w.classList.add('sel-enabled'));
+}
+
+// ─── Card tap → flip ─────────────────────────────────────────
+function onCardTap(card){
+  if(!canPick) return;
+  canPick = false;
+
+  const isUp = Math.random() > 0.2; // 80% upright
+  chosenCard = card;
+  chosenUp   = isUp;
+
+  // Fade all other cards
+  document.querySelectorAll('.cw').forEach(w=>{
+    if(parseInt(w.dataset.id) !== card.id) w.classList.add('faded');
+    w.classList.remove('sel-enabled');
+  });
+
+  // Rotate image if reversed (applied after flip)
+  const ci = document.getElementById(`ci${card.id}`);
+  if(!isUp){
+    const img = ci.querySelector('.cf img');
+    img.style.transition = 'transform .3s ease .72s';
+    img.style.transform  = 'rotate(180deg)';
   }
-  if(n===2 && selectedCardId!==null){
-    const card = CARDS[selectedCardId];
-    document.getElementById('card-prev-wrap').innerHTML = `
-      <div class="card-preview">
-        <img src="${card.image_url}" alt="${card.name}">
-        <div><div class="card-preview-name">${card.name}</div><div class="card-preview-en">${card.name_en}</div></div>
-      </div>`;
-  }
-  window.scrollTo({top:0,behavior:'smooth'});
+
+  // Trigger flip
+  ci.classList.add('flipped');
+
+  // Go to Step 3 after animation
+  setTimeout(()=>showStep3(card, isUp), 950);
 }
 
-const msgs=['カードのエネルギーを読み取っています...','あなたの悩みと照合しています...','あの人の本音を探っています...','鑑定文を紡いでいます...'];
-let mi=0;
-function typeMsg(text,el,cb){
+function showStep3(card, isUp){
+  // Fill in card details
+  document.getElementById('fc-img').innerHTML =
+    `<img src="${card.image_url}" alt="${card.name}" class="${isUp?'':'rev'}">`;
+  document.getElementById('fc-prob').textContent   = prob + 'の鑑定';
+  document.getElementById('fc-name').textContent   = card.name;
+  document.getElementById('fc-en').textContent     = card.name_en;
+  document.getElementById('fc-orient').textContent = isUp ? '正位置 ↑' : '逆位置 ↓';
+
+  // Set hidden form fields
+  document.getElementById('fi-id').value   = card.id;
+  document.getElementById('fi-up').value   = isUp ? 'true' : 'false';
+  document.getElementById('fi-prob').value = prob;
+
+  setStep(2);
+}
+
+// ─── Loading overlay ─────────────────────────────────────────
+const msgs = [
+  'カードのエネルギーを読み取っています...',
+  'あなたの状況と照合しています...',
+  'あの人の本音を探っています...',
+  '3,000文字の鑑定文を紡いでいます...',
+];
+let mi = 0;
+function typeMsg(text, el, cb){
   el.textContent=''; let i=0;
   const t=setInterval(()=>{
     el.textContent+=text[i++];
-    if(i>=text.length){clearInterval(t);if(cb)setTimeout(cb,1600);}
-  },55);
+    if(i>=text.length){ clearInterval(t); if(cb) setTimeout(cb, 1800); }
+  },50);
 }
-function cycleMsgs(){ typeMsg(msgs[mi%msgs.length],document.getElementById('lmsg'),cycleMsgs); mi++; }
+function cycleMsgs(){ typeMsg(msgs[mi%msgs.length], document.getElementById('lmsg'), cycleMsgs); mi++; }
+
 function spawnFS(){
   const c=document.getElementById('fsc');
-  for(let i=0;i<50;i++){
-    const fs=document.createElement('div'); fs.className='fs';
-    const h=Math.random()*60+30;
+  for(let i=0;i<55;i++){
+    const fs=document.createElement('div'); fs.className='fstar';
+    const h=Math.random()*70+30;
     fs.style.cssText=`left:${Math.random()*100}%;top:${-h}px;height:${h}px;--fd:${(Math.random()*4+3).toFixed(1)}s;--fdl:${(Math.random()*6).toFixed(1)}s;`;
     c.appendChild(fs);
   }
 }
-document.getElementById('tarot-form').addEventListener('submit',()=>{
-  document.getElementById('loading').classList.add('on');
+
+document.getElementById('mf').addEventListener('submit', ()=>{
+  document.getElementById('ld').classList.add('on');
   spawnFS(); cycleMsgs();
 });
 </script>
